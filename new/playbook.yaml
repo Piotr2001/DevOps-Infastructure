@@ -1,0 +1,5 @@
+- name: run roles on ec2
+  hosts: ec2
+  become: yes
+  roles:
+    - lab5

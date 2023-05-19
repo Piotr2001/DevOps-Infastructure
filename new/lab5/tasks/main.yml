@@ -1,0 +1,67 @@
+---
+# tasks file for lab5
+
+# dev environment set-up
+
+- name: create dev group 
+  group:
+    name: Devs
+    state: present
+
+- name: add new user
+  user: 
+    name: Piotr   
+    group: Devs
+    state: present
+
+# install zsh and curl 
+
+- name: install zsh and curl
+  package:
+    name: ['curl', 'zsh']
+    state: present
+
+# docker install
+
+- name: install docker
+  shell:
+    cmd: curl https://get.docker.com | sudo bash
+
+# Jenkins install
+
+- name: install repo url
+  apt_key:
+    url: 'https://pkg.jenkins.io/debian/jenkins.io-2023.key' 
+    state: present
+
+- name: repo configurtaion
+  apt_repository:
+    repo: 'deb https://pkg.jenkins.io/debian-stable binary/'
+    state: present
+    update_cache: yes
+  
+- name: install openjdk
+  package:
+    name: openjdk-11-jdk
+    state: present
+
+- name: install Jenkins
+  package:
+    name: jenkins
+    state: present
+  notify:
+    - start jenkins
+
+# install and set-up nginx 
+
+- name: install nginx
+  package:
+    name: nginx
+    state: present
+  notify:
+    - restart nginx
+
+- name: edit the index.html file
+  copy:
+    src: files/index.html
+    dest: /var/www/html/index.nginx-debian.html
