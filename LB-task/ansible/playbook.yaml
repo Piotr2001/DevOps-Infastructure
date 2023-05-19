@@ -1,0 +1,20 @@
+- name: nginx install and config
+  hosts: ec2
+  become: yes
+  tasks:
+    - name: install nginx
+      package:
+        name: nginx
+        state: present
+
+    - name: update htmlfile on host one
+      when: ansible_host == '18.130.207.37'
+      copy:
+        src: ~/DevOps-Infastructure/LB-task/ansible/index1.html
+        dest: /var/www/html/index.nginx-debian.html
+
+    - name: update htmlfile on host two
+      when: ansible_host == '13.42.40.63'
+      copy:
+        src: ~/DevOps-Infastructure/LB-task/ansible/index2.html
+        dest: /var/www/html/index.nginx-debian.html
